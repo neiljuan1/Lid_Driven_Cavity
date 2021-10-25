@@ -22,8 +22,8 @@ def main():
     mu = rho*L/Re
     t = 1
     #npts = 5
-    nx = 50
-    ny = 50
+    nx = 31
+    ny = 31
     npts = nx*ny
 
     dy = dx = L/(nx-1)
@@ -47,9 +47,9 @@ def main():
     p_res = np.zeros(shape = (nx+1,ny+1))
 
 
-    alpha_u = 0.4 # URF
+    alpha_u = 0.8 # URF
     alpha_v = alpha_u
-    alpha_p = 0.4
+    alpha_p = 0.8
     maxiter = 5000
     niter = 1
 
@@ -123,13 +123,13 @@ def main():
     v[:,0] = 0 # lid
     p[:,0] = p[:,1] # lid
     # South
-    u[:,-1] = 0
+    u[:,-1] = 0#-u[:,-2]
     v[:,-1] = 0
     p[:,-1] = p[:,-2]
 
 
     # Initial Guesses
-    p[:,:] = 0
+    p[:,:] = 0#1
     p_star[:,:] = p.copy()
     u_star = u.copy()
     v_star = v.copy()
@@ -173,10 +173,17 @@ def main():
                 D_n = mu / dy * dy*t
                 D_s = mu / dy * dx*t
 
-                ua_W[i,j] = D_w + F_w/2
-                ua_E[i,j] = D_e - F_e/2
-                ua_N[i,j] = D_n - F_n/2
-                ua_S[i,j] = D_s + F_s/2
+                # Central Difference
+                #ua_W[i,j] = D_w + F_w/2
+                #ua_E[i,j] = D_e - F_e/2
+                #ua_N[i,j] = D_n - F_n/2
+                #ua_S[i,j] = D_s + F_s/2
+
+                # Hybrid
+                ua_W[i,j] = max(F_w, D_w + F_w/2, 0)
+                ua_E[i,j] = max(-F_e, D_e - F_e/2, 0)
+                ua_N[i,j] = max(-F_n, D_n - F_n/2, 0)
+                ua_S[i,j] = max(F_s, D_s + F_s/2, 0)
 
                 ua_P[i,j] = (ua_E[i,j] + ua_W[i,j] + ua_N[i,j] + ua_S[i,j])/alpha_u
 
@@ -225,10 +232,17 @@ def main():
                 D_n = mu / dy * dy*t
                 D_s = mu / dy * dx*t
 
-                va_W[i,j] = D_w + F_w/2
-                va_E[i,j] = D_e - F_e/2
-                va_N[i,j] = D_n - F_n/2
-                va_S[i,j] = D_s + F_s/2
+                # Central Difference
+                #va_W[i,j] = D_w + F_w/2
+                #va_E[i,j] = D_e - F_e/2
+                #va_N[i,j] = D_n - F_n/2
+                #va_S[i,j] = D_s + F_s/2
+
+                # Hybrid
+                va_W[i,j] = max(F_w, D_w + F_w/2, 0)
+                va_E[i,j] = max(-F_e, D_e - F_e/2, 0)
+                va_N[i,j] = max(-F_n, D_n - F_n/2, 0)
+                va_S[i,j] = max(F_s, D_s + F_s/2, 0)
 
                 va_P[i,j] = (va_E[i,j] + va_W[i,j] + va_N[i,j] + va_S[i,j])/alpha_v
 
@@ -272,7 +286,7 @@ def main():
                 # Flux in - flux out. Fw - Fe + Fs- Fn
                 pbp[i,j] = (pF_w_star - pF_e_star) + (pF_s_star - pF_n_star) # b prime
 
-
+        pp[:,:] = 0
         for i in range(1,nx):
             for j in range(1,ny):
                 pp[i,j] = (pa_W[i,j]*pp[i+1,j] + pa_E[i,j]*pp[i-1,j] + pa_S[i,j]*pp[i,j+1] + pa_N[i,j]*pp[i,j-1] \
@@ -313,14 +327,14 @@ def main():
         # U
         # East
         u[0,:] = 0
-        v[0,:] = 0
+        v[0,:] = 0#-v[1,:]
         p[0,:] = p[1,:]
         # West
         u[-1,:] = 0
-        v[-1,:] = 0
+        v[-1,:] = 0#-v[-2,:]
         p[-1,:] = p[-2,:]
         # North 
-        u[:,0] = U # lid
+        u[:,0] =  U#2 - u[:,1]# lid
         v[:,0] = 0 # lid
         p[:,0] = p[:,1] # lid
         # South
@@ -340,12 +354,15 @@ def main():
         niter+=1
         print("_______iter______{}_____error__________________{}".format(niter,error))
 
-    for i in range(0,nx):
-        for j in range(0,ny):
-            u_sol[i,j] = (u[i,j] + u[i,j+1])/2
-            v_sol[i,j] = (v[i,j] + v[i+1,j])/2
-            p_sol[i,j] = (p[i,j] + p[i,j+1] + p[i+1,j] + p[i+1,j+1])/4
-            
+    #for i in range(0,nx):
+    #    for j in range(0,ny):
+    #        u_sol[i,j] = (u[i,j] + u[i,j+1])/2
+    #        v_sol[i,j] = (v[i,j] + v[i+1,j])/2
+    #        p_sol[i,j] = (p[i,j] + p[i,j+1] + p[i+1,j] + p[i+1,j+1])/4
+
+    u_sol[:,:] = u[:,:-1]
+    v_sol[:,:] = v[:-1,:]
+    p_sol[:,:] = p[:-1,:-1]
     u_sol[:,0] = U  
 
     print(np.round(u_sol,3))
@@ -355,8 +372,19 @@ def main():
     print(np.round(p_sol,3))
     print("\n")
 
-    post_processor.contour_plot(x,y,nx,ny,u_sol,v_sol,p_sol)
-    post_processor.horizontal(x,y,nx,ny,u_sol,v_sol,p_sol)
+    u_sol_new = u_sol.copy()
+    v_sol_new = v_sol.copy()
+    p_sol_new = p_sol.copy()
+
+    for i in range(nx):
+        for j in range(ny):
+            u_sol_new[i,j] = u_sol[ny-j-1,i]
+            v_sol_new[i,j] = v_sol[ny-j-1,i]
+            p_sol_new[i,j] = p_sol[ny-j-1,i]
+        
+
+    post_processor.contour_plot(x,y,nx,ny,u_sol_new,v_sol_new,p_sol_new)
+    post_processor.horizontal(x,y,nx,ny,u_sol_new,v_sol_new,p_sol_new)
 
 if __name__=='__main__' :
     main()
