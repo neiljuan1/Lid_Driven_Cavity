@@ -18,13 +18,13 @@ Verifying the Lid Driven Cavity code required a verification with previous liter
 <!--![U solution](data/U_129.png)![U solution](data/V_129.png) -->
 ### U and V solution
 <p float="left">
-  <img src="data/U_129.png" alt="U solution" width="450"/>
-  <img src="data/V_129.png" alt="V solution" width="447"/>
+  <img src="data/U_129.png" alt="U solution" width="400"/>
+  <img src="data/V_129.png" alt="V solution" width="397"/>
 </p>
 
 
 ### Veloctiy Comparison with Ghia
-<img src="data/ghia_comparison.png" alt="Velocity Comparison" width="900"/>
+<img src="data/ghia_comparison.png" alt="Velocity Comparison" width="800"/>
 
 ### Residuals
 <img src="data/Residuals_129x129_7960s_11659it.png" alt="Residuals" width="750"/>
