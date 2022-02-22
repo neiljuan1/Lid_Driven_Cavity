@@ -21,6 +21,8 @@ Verifying the Lid Driven Cavity code required a verification with previous liter
   <img src="data/U_129.png" alt="U solution" width="500"/>
   <img src="data/V_129.png" alt="V solution" width="497"/>
 </p>
+
+
 ### Veloctiy Comparison with Ghia
 <img src="data/ghia_comparison.png" alt="Velocity Comparison" width="1000"/>
 
