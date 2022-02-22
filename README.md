@@ -15,3 +15,14 @@ This project utilizes the SIMPLE algorithm on a staggered grid, which is an iter
 Verifying the Lid Driven Cavity code required a verification with previous literature. The work Ghie et al is used to ensure a sufficient solution of the code. 
 
 ## Results
+<!--![U solution](data/U_129.png)![U solution](data/V_129.png) -->
+### U and V solution
+<p float="left">
+  <img src="data/U_129.png" alt="U solution" width="500"/>
+  <img src="data/V_129.png" alt="V solution" width="497"/>
+</p>
+### Veloctiy Comparison with Ghia
+<img src="data/ghia_comparison.png" alt="Velocity Comparison" width="1000"/>
+
+### Residuals
+<img src="data/Residuals_129x129_7960s_11659it.png" alt="Residuals" width="750"/>
