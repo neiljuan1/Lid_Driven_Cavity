@@ -18,8 +18,8 @@ Verifying the Lid Driven Cavity code required a verification with previous liter
 <!--![U solution](data/U_129.png)![U solution](data/V_129.png) -->
 ### U and V solution
 <p float="left">
-  <img src="data/U_129.png" alt="U solution" width="500"/>
-  <img src="data/V_129.png" alt="V solution" width="497"/>
+  <img src="data/U_129.png" alt="U solution" width="400"/>
+  <img src="data/V_129.png" alt="V solution" width="397"/>
 </p>
 
 
